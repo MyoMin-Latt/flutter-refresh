@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class RefreshPage extends StatefulWidget {
-  const RefreshPage({Key? key}) : super(key: key);
+class RefreshApiPage extends StatefulWidget {
+  const RefreshApiPage({Key? key}) : super(key: key);
 
   @override
-  State<RefreshPage> createState() => _RefreshPageState();
+  State<RefreshApiPage> createState() => _RefreshApiPageState();
 }
 
-class _RefreshPageState extends State<RefreshPage> {
+class _RefreshApiPageState extends State<RefreshApiPage> {
   final controller = ScrollController();
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   @override

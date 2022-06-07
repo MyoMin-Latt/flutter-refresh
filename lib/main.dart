@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refresh_flutter/refresh_api_page.dart';
 import 'package:refresh_flutter/refresh_page.dart';
 
 void main() {
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: RefreshPage(),
+      home: RefreshApiPage(),
     );
   }
 }
