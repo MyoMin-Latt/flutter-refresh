@@ -71,38 +71,27 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
               icon: const Icon(Icons.clear))
         ],
       ),
-      body: Column(
-        children: [
-          const Text(
-            'Data',
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 26),
-          ),
-          Expanded(
-            child: ListView.builder(
-              controller: controller,
-              itemExtent: 100.0,
-              itemCount: items.length + 1, // 25 + 1
-              itemBuilder: (c, i) {
-                if (i < items.length) {
-                  return Card(
-                    color: Colors.greenAccent,
-                    child: Center(
-                      child: Text(items[i]),
-                    ),
-                  );
-                } else {
-                  // print('i < items.length => $i < ${items.length}');
-                  return Center(
-                    child: hasMore
-                        ? const CircularProgressIndicator()
-                        : const Text('No More Data'),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+      body: ListView.builder(
+        controller: controller,
+        itemExtent: 100.0,
+        itemCount: items.length + 1, // 25 + 1
+        itemBuilder: (c, i) {
+          if (i < items.length) {
+            return Card(
+              color: Colors.greenAccent,
+              child: Center(
+                child: Text(items[i]),
+              ),
+            );
+          } else {
+            // print('i < items.length => $i < ${items.length}');
+            return Center(
+              child: hasMore
+                  ? const CircularProgressIndicator()
+                  : const Text('No More Data'),
+            );
+          }
+        },
       ),
     );
   }
