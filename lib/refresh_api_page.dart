@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class RefreshApiPage extends StatefulWidget {
   const RefreshApiPage({Key? key}) : super(key: key);
@@ -9,10 +12,16 @@ class RefreshApiPage extends StatefulWidget {
 
 class _RefreshApiPageState extends State<RefreshApiPage> {
   final controller = ScrollController();
-  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  List<String> items = [];
+  final limit = 25;
+  int page = 1;
+  bool hasMore = true;
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
+    fetch();
     controller.addListener(() {
       if (controller.position.maxScrollExtent == controller.offset) {
         fetch();
@@ -21,10 +30,24 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
   }
 
   Future<void> fetch() async {
-    await Future.delayed(const Duration(milliseconds: 1200));
-    setState(() {
-      items.addAll(['A', 'B', 'C', 'D', 'E']);
-    });
+    // print(
+    //     'controller.position.maxScrollExtent == controller.offset => ${controller.position.maxScrollExtent} / ${controller.offset}');
+    if (isLoading) return;
+    isLoading = true;
+    final url = Uri.parse(
+        'https://jsonplaceholder.typicode.com/posts?_limit=$limit&_page=$page');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final List newItems = jsonDecode(response.body);
+      setState(() {
+        isLoading = false;
+        page++;
+        items.addAll(newItems.map((item) => 'Item ${item['id']}').toList());
+        if (newItems.length < limit) {
+          hasMore = false;
+        }
+      });
+    }
   }
 
   @override
@@ -59,10 +82,9 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
             child: ListView.builder(
               controller: controller,
               itemExtent: 100.0,
-              itemCount: items.length + 1,
+              itemCount: items.length + 1, // 25 + 1
               itemBuilder: (c, i) {
                 if (i < items.length) {
-                  // print('i < items.length => $i < ${items.length}');
                   return Card(
                     color: Colors.greenAccent,
                     child: Center(
@@ -71,8 +93,10 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
                   );
                 } else {
                   // print('i < items.length => $i < ${items.length}');
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Center(
+                    child: hasMore
+                        ? const CircularProgressIndicator()
+                        : const Text('No More Data'),
                   );
                 }
               },
@@ -90,3 +114,6 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
   //  super.dispose();
   // }
 }
+
+// print() in listview
+// controller.offset = controller.position.pixels
