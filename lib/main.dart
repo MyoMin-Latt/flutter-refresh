@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:refresh_flutter/refresh_api_page.dart';
-import 'package:refresh_flutter/refresh_page.dart';
+
+import 'refresh_api_page.dart';
 
 void main() {
   runApp(const MyApp());

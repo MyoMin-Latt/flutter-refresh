@@ -30,8 +30,6 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
   }
 
   Future<void> fetch() async {
-    // print(
-    //     'controller.position.maxScrollExtent == controller.offset => ${controller.position.maxScrollExtent} / ${controller.offset}');
     if (isLoading) return;
     isLoading = true;
     final url = Uri.parse(
@@ -48,6 +46,16 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
         }
       });
     }
+  }
+
+  Future onRefresh() async {
+    setState(() {
+      isLoading = false;
+      hasMore = true;
+      page = 1;
+      items = [];
+    });
+    fetch();
   }
 
   @override
@@ -71,27 +79,30 @@ class _RefreshApiPageState extends State<RefreshApiPage> {
               icon: const Icon(Icons.clear))
         ],
       ),
-      body: ListView.builder(
-        controller: controller,
-        itemExtent: 100.0,
-        itemCount: items.length + 1, // 25 + 1
-        itemBuilder: (c, i) {
-          if (i < items.length) {
-            return Card(
-              color: Colors.greenAccent,
-              child: Center(
-                child: Text(items[i]),
-              ),
-            );
-          } else {
-            // print('i < items.length => $i < ${items.length}');
-            return Center(
-              child: hasMore
-                  ? const CircularProgressIndicator()
-                  : const Text('No More Data'),
-            );
-          }
-        },
+      body: RefreshIndicator(
+        onRefresh: onRefresh,
+        child: ListView.builder(
+          controller: controller,
+          itemExtent: 100.0,
+          itemCount: items.length + 1, // 25 + 1
+          itemBuilder: (c, i) {
+            if (i < items.length) {
+              return Card(
+                color: Colors.greenAccent,
+                child: Center(
+                  child: Text(items[i]),
+                ),
+              );
+            } else {
+              // print('i < items.length => $i < ${items.length}');
+              return Center(
+                child: hasMore
+                    ? const CircularProgressIndicator()
+                    : const Text('No More Data'),
+              );
+            }
+          },
+        ),
       ),
     );
   }
